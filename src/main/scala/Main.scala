@@ -2,12 +2,9 @@ import java.net.{HttpURLConnection, URL}
 import java.util.Base64
 
 object Main {
-
-  //private class auth(var user: String, var pass: String, var sendImmediately: Boolean) {}
-
   final val API_URL = "https://myanimelist.net/api/anime/search.xml?q="
-  final val API_USER = ""
-  final val API_PASSWORD = ""
+  var API_USER:String = null
+  var API_PASSWORD:String = null
 
   def get(url: String, timeout : Int = 5000): String = {
     val connection = new URL(url).openConnection.asInstanceOf[HttpURLConnection]
@@ -21,8 +18,16 @@ object Main {
     content
   }
 
+  val checkCredentials: () => Unit = () => {
+    if (API_USER == null || API_PASSWORD == null) {
+      API_USER = scala.io.StdIn.readLine("Enter your myanimelist username : ")
+      API_PASSWORD = scala.io.StdIn.readLine("Enter your myanimelist password : ")
+    }
+  }
+
   def handleInput() {
-    var arg = scala.io.StdIn.readLine()
+    checkCredentials
+    var arg = scala.io.StdIn.readLine("Search your anime : ")
     arg = arg.replaceAll(" ", "+")
     try {
       println(get(API_URL + arg))
