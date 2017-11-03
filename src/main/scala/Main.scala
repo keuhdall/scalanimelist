@@ -1,5 +1,6 @@
 import java.net.{HttpURLConnection, URL}
 import java.util.Base64
+import scala.xml.XML
 
 object Main {
   final val API_URL = "https://myanimelist.net/api/anime/search.xml?q="
@@ -26,10 +27,11 @@ object Main {
   }
 
   def handleInput() {
-    checkCredentials
+    checkCredentials()
     var arg = scala.io.StdIn.readLine("Search your anime : ")
     arg = arg.replaceAll(" ", "+")
     try {
+      val xmlElem = XML.loadString(get(API_URL + arg))
       println(get(API_URL + arg))
     } catch {
       case ioe: java.io.IOException => ioe.printStackTrace()
